@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wesal Nowsher — Senior Frontend Engineer & AI Integration</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050508;--surface:#0d0d14;--surface2:#13131e;--surface3:#1a1a2a;
+  --border:#ffffff0f;--border2:#ffffff18;
+  --text:#e8e8f0;--muted:#6e6e8a;--hint:#3a3a52;
+  --accent:#7c6cfc;--accent2:#a78bfa;--accent3:#c4b5fd;
+  --teal:#2dd4bf;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow:hidden}
+.shell{display:flex;height:100vh;overflow:hidden}
+
+/* LEFT */
+.left{width:380px;min-width:380px;height:100vh;display:flex;flex-direction:column;border-right:1px solid var(--border);position:relative;overflow:hidden;flex-shrink:0}
+#hero-canvas{position:absolute;inset:0;pointer-events:none;z-index:0}
+.left-inner{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:2rem 1.75rem}
+.brand{font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--accent3)}
+.left-content{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1rem 0}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;padding:4px 12px;background:rgba(124,108,252,.08);border:1px solid rgba(124,108,252,.18);border-radius:100px;font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem;width:fit-content}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:blink 2s ease infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-name{font-family:'DM Serif Display',serif;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:.92;color:#fff;margin-bottom:.5rem}
+.hero-name em{font-style:italic;color:var(--accent3)}
+.hero-role{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.04em;margin-bottom:1.3rem;line-height:1.6}
+.hero-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1.5rem}
+.hero-desc strong{color:var(--text);font-weight:700}
+.hero-desc em{color:var(--accent3);font-style:normal}
+.hero-stats{display:flex;gap:0;padding-top:1.2rem;border-top:1px solid var(--border)}
+.stat-item{flex:1;padding-right:1rem}
+.stat-item:not(:last-child){border-right:1px solid var(--border);margin-right:1rem}
+.stat-item .val{font-family:'DM Serif Display',serif;font-size:1.7rem;color:#fff;display:block;line-height:1}
+.stat-item .lbl{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-top:3px}
+
+/* NAV */
+nav{padding:.75rem 0;border-top:1px solid var(--border);margin-top:auto}
+.nav-links{display:flex;flex-direction:column;gap:2px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--muted);border:1px solid transparent;background:none;cursor:pointer;border-radius:8px;transition:all .18s;text-align:left;width:100%;font-family:'Syne',sans-serif}
+.nav-link:hover{color:var(--text);background:var(--surface3)}
+.nav-link.active{color:#fff;background:var(--surface2);border-color:var(--border2)}
+.nav-link .dot{width:6px;height:6px;border-radius:50%;background:var(--hint);flex-shrink:0;transition:all .2s}
+.nav-link.active .dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.nav-link .lbl{flex:1}
+.nav-link .arr{opacity:0;transform:translateX(-4px);transition:all .2s;font-size:12px}
+.nav-link.active .arr,.nav-link:hover .arr{opacity:1;transform:translateX(0)}
+
+/* RIGHT */
+.right{flex:1;height:100vh;overflow-y:auto;scroll-behavior:smooth}
+.right::-webkit-scrollbar{width:4px}
+.right::-webkit-scrollbar-thumb{background:var(--hint);border-radius:2px}
+.right-default{height:100%;display:flex;align-items:center;justify-content:center}
+.right-default-hint{font-size:13px;color:var(--hint);text-align:center;max-width:220px;line-height:1.6}
+.panel{display:none;animation:fadeIn .3s ease;padding:2.5rem}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);color:#fff;margin-bottom:.4rem}
+.sec-sub{color:var(--muted);font-size:13.5px;line-height:1.65;margin-bottom:2rem}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .22s;text-decoration:none;display:block}
+.project-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,108,252,.13)}
+.proj-accent{height:4px}
+.proj-body{padding:1.1rem 1rem}
+.proj-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
+.proj-tag{display:inline-block;padding:2px 8px;background:var(--surface3);border-radius:100px;font-size:10px;font-weight:700;color:var(--accent3);letter-spacing:.04em;flex-shrink:0}
+.proj-ext{font-size:14px;color:var(--hint);transition:color .2s}
+.project-card:hover .proj-ext{color:var(--accent3)}
+.proj-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.3rem}
+.proj-desc{font-size:12px;color:var(--muted);line-height:1.55}
+.proj-url{display:inline-flex;align-items:center;gap:3px;margin-top:.6rem;font-size:10px;font-weight:600;color:var(--hint);font-family:'DM Mono',monospace;transition:color .2s}
+.project-card:hover .proj-url{color:var(--accent3)}
+.proj-wide{grid-column:span 2}
+.proj-wide .proj-body{display:flex;gap:1.25rem;align-items:flex-start}
+.proj-wide .proj-main{flex:1}
+.proj-wide .proj-meta{flex-shrink:0;text-align:right}
+
+/* GITHUB */
+.gh-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem}
+.gh-grid{display:grid;grid-template-columns:repeat(52,1fr);gap:2px;margin:.6rem 0}
+.gh-cell{aspect-ratio:1;border-radius:2px;background:var(--surface3)}
+.gh-cell.l1{background:#3b3066}.gh-cell.l2{background:#5b46a8}.gh-cell.l3{background:#7c6cfc}.gh-cell.l4{background:#a78bfa}
+.gh-months{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-family:'DM Mono',monospace}
+.gh-stats-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.8rem}
+.gh-stat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;flex:1;min-width:80px}
+.gh-stat .n{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;color:#fff}
+.gh-stat .l{font-size:10px;color:var(--muted);margin-top:1px}
+.lang-bar{height:5px;border-radius:3px;overflow:hidden;display:flex;margin-top:1.2rem;background:var(--surface3)}
+.lang-seg{height:100%}
+.lang-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:.4rem}
+.lang-dot{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.lang-dot-c{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* STORY */
+.story-timeline{position:relative;padding-left:1.75rem}
+.story-timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--hint)}
+.story-item{position:relative;margin-bottom:2rem}
+.story-dot{position:absolute;left:-1.75rem;top:5px;width:7px;height:7px;border-radius:50%;background:var(--accent);transform:translateX(-3px);box-shadow:0 0 10px var(--accent)}
+.story-year{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent3);font-weight:500;margin-bottom:.25rem}
+.story-head{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.3rem}
+.story-body{font-size:13px;color:var(--muted);line-height:1.65}
+.story-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:.5rem}
+.tag{padding:2px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--muted);font-weight:600}
+.quote-card{background:linear-gradient(135deg,rgba(124,108,252,.07),rgba(45,212,191,.04));border:1px solid rgba(124,108,252,.18);border-radius:14px;padding:1.5rem;margin-top:1.5rem}
+
+/* HIRE */
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.service-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;transition:all .2s}
+.service-card:hover{border-color:var(--accent);background:var(--surface2)}
+.service-icon{font-size:1.4rem;margin-bottom:.5rem}
+.service-name{font-size:.825rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+.service-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.connect-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.connect-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;display:flex;align-items:center;gap:10px;text-decoration:none;transition:all .2s}
+.connect-card:hover{border-color:var(--accent);background:var(--surface2)}
+.connect-icon{font-size:1.1rem;flex-shrink:0}
+.connect-label{font-size:12px;font-weight:700;color:#fff}
+.connect-sub{font-size:10px;color:var(--muted)}
+.cta-block{background:linear-gradient(135deg,rgba(124,108,252,.1),rgba(45,212,191,.04));border:1px solid rgba(124,108,252,.2);border-radius:14px;padding:1.75rem;text-align:center}
+.cta-block h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;margin-bottom:.4rem}
+.cta-block p{color:var(--muted);font-size:13px;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:var(--accent2)}
+.btn-wa{padding:9px 18px;background:#25d366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;transition:background .2s;text-decoration:none;display:inline-block}
+.btn-wa:hover{background:#1ebe5a}
+.btn-outline{padding:9px 18px;background:transparent;color:var(--text);border:1px solid var(--border2);border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;display:inline-block;transition:all .2s;font-family:'Syne',sans-serif}
+.btn-outline:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent3)}
+
+/* MOBILE */
+@media(max-width:700px){
+  html,body{overflow:auto;height:auto}
+  .shell{flex-direction:column;height:auto;overflow:visible}
+  .left{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  #hero-canvas{display:none}
+  .left-inner{padding:1.5rem}
+  .left-content{padding:.5rem 0;justify-content:flex-start}
+  .hero-name{font-size:2.3rem}
+  nav{border-top:1px solid var(--border);padding:.5rem 0}
+  .nav-links{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .nav-link{padding:6px 10px;font-size:11px;width:auto}
+  .nav-link .arr{display:none}
+  .right{height:auto;overflow:visible}
+  .panel{padding:1.75rem 1.25rem}
+  .right-default{display:none}
+  .projects-grid{grid-template-columns:1fr}
+  .proj-wide{grid-column:span 1}
+  .proj-wide .proj-body{flex-direction:column;gap:.75rem}
+  .proj-wide .proj-meta{text-align:left}
+  .service-grid,.connect-grid{grid-template-columns:1fr}
+  .hero-stats{gap:0}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- LEFT -->
+  <div class="left">
+    <canvas id="hero-canvas"></canvas>
+    <div class="left-inner">
+      <div class="brand">W·N</div>
+      <div class="left-content">
+        <div class="hero-eyebrow"><span class="pulse"></span>Selectively available</div>
+        <h1 class="hero-name">Wesal<br><em>Nowsher</em></h1>
+        <p class="hero-role">Senior Frontend Engineer · AI Integration · Tech Lead<br>Islamabad, PK · Remote-first</p>
+        <p class="hero-desc">
+          I've shipped <strong>300+ products</strong> — real estate, health, security, SaaS —
+          for clients across <em>Australia, US, UK &amp; Dubai</em>.
+          I don't just write code. I figure out <strong>what to build and why</strong>,
+          then make it fast, scalable, and intelligent.
+        </p>
+        <div class="hero-stats">
+          <div class="stat-item"><span class="val">300+</span><span class="lbl">Projects</span></div>
+          <div class="stat-item"><span class="val">7+</span><span class="lbl">Years</span></div>
+          <div class="stat-item"><span class="val">4</span><span class="lbl">Markets</span></div>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-links">
+          <button class="nav-link" onclick="show('projects',this)"><span class="dot"></span><span class="lbl">Work</span><span class="arr">›</span></button>
+          <button class="nav-link" onclick="show('github',this)"><span class="dot"></span><span class="lbl">Activity</span><span class="arr">›</span></button>
+          <button class="nav-link" onclick="show('story',this)"><span class="dot"></span><span class="lbl">Story</span><span class="arr">›</span></button>
+          <button class="nav-link" onclick="show('hire',this)"><span class="dot"></span><span class="lbl">Hire Me</span><span class="arr">›</span></button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right" id="right-panel">
+    <div class="right-default" id="right-default">
+      <div class="right-default-hint">Choose a section on the left to explore.</div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="panel" id="panel-projects">
+      <div class="sec-label">Selected Work</div>
+      <h2 class="sec-title">Live in the Wild</h2>
+      <p class="sec-sub">A slice of 300+ shipped products. Every link goes somewhere real.</p>
+      <div class="projects-grid">
+
+        <a class="project-card" href="https://pawtalk-ai.vercel.app/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#7c6cfc,#2dd4bf)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">AI Product</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">PawTalk AI</div>
+            <div class="proj-desc">LLM-powered pet communication platform. My most forward-looking AI product — built before most developers understood prompting.</div>
+            <div class="proj-url">pawtalk-ai.vercel.app</div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://armorprocoatingsohio.com/visualizer/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#f59e0b,#f87171)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">Interactive</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">Armor Pro Visualizer</div>
+            <div class="proj-desc">Real-time product visualizer — customers see exactly what they're buying before they buy it. Complex UX, clean execution.</div>
+            <div class="proj-url">armorprocoatingsohio.com</div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://www.wanderpact.co/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#2dd4bf,#3b82f6)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">Travel Tech</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">WanderPact</div>
+            <div class="proj-desc">Travel platform built for international audiences. Strong brand identity, booking-focused UX that actually converts.</div>
+            <div class="proj-url">wanderpact.co</div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://www.evirtualassistants.com/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#a78bfa,#7c6cfc)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">B2B SaaS</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">eVirtual Assistants</div>
+            <div class="proj-desc">Lead generation platform for VA services. Conversion-optimised from top to bottom — every journey has a clear destination.</div>
+            <div class="proj-url">evirtualassistants.com</div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://www.ziskproperties.com/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#c4b5fd,#a78bfa)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">Real Estate</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">Zisk Properties</div>
+            <div class="proj-desc">Property platform engineered to turn browsers into buyers. Performance-first with a UX that removes every friction point.</div>
+            <div class="proj-url">ziskproperties.com</div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://leargassecurity.com/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#6b7280,#374151)"></div>
+          <div class="proj-body">
+            <div class="proj-header">
+              <span class="proj-tag">Enterprise</span>
+              <span class="proj-ext">↗</span>
+            </div>
+            <div class="proj-title">Leargas Security</div>
+            <div class="proj-desc">Corporate security firm digital presence. Authority and trust baked into every design decision — nothing frivolous, nothing weak.</div>
+            <div class="proj-url">leargassecurity.com</div>
+          </div>
+        </a>
+
+        <a class="project-card proj-wide" href="https://www.ladstech.com/" target="_blank" rel="noopener">
+          <div class="proj-accent" style="background:linear-gradient(90deg,#7c6cfc,#2dd4bf,#f59e0b)"></div>
+          <div class="proj-body">
+            <div class="proj-main">
+              <div class="proj-header">
+                <span class="proj-tag">Tech Agency</span>
+                <span class="proj-ext">↗</span>
+              </div>
+              <div class="proj-title">Lads Tech</div>
+              <div class="proj-desc">Full-scale tech agency website — multi-service architecture, clear conversion paths, polished product that speaks for itself. One of my most comprehensive builds.</div>
+              <div class="proj-url">ladstech.com</div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- GITHUB -->
+    <div class="panel" id="panel-github">
+      <div class="sec-label">Real-Time Activity</div>
+      <h2 class="sec-title">Building Every Day</h2>
+      <p class="sec-sub">847 contributions this year across client work, open source, and side projects.</p>
+      <div class="gh-wrap">
+        <div class="gh-months" id="gh-months"></div>
+        <div class="gh-grid" id="gh-grid"></div>
+        <div class="gh-stats-row" id="gh-stats"></div>
+        <div style="margin-top:1.2rem">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:.4rem">Language Breakdown</div>
+          <div class="lang-bar" id="lang-bar"></div>
+          <div class="lang-legend" id="lang-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="panel" id="panel-story">
+      <div class="sec-label">Personal Brand</div>
+      <h2 class="sec-title">The Long Game</h2>
+      <p class="sec-sub">Not from Silicon Valley. Built this from Islamabad — every skill earned, not inherited.</p>
+      <div class="story-timeline">
+        <div class="story-item">
+          <div class="story-dot"></div>
+          <div class="story-year">2018 — Origin</div>
+          <div class="story-head">Started with a single React tutorial at 2am</div>
+          <div class="story-body">No bootcamp. No CS degree advantage. No inherited network. Just relentless curiosity and the recognition that the web was the world's most powerful equaliser for someone in Pakistan.</div>
+          <div class="story-tags"><span class="tag">React</span><span class="tag">Self-taught</span><span class="tag">Islamabad</span></div>
+        </div>
+        <div class="story-item">
+          <div class="story-dot"></div>
+          <div class="story-year">2020 — Breakthrough</div>
+          <div class="story-head">First international client — geography stopped mattering</div>
+          <div class="story-body">Proved location is irrelevant if your code is world-class. That first engagement opened a network across Australia, US, UK, and Dubai. Upwork became a launchpad for a genuinely global practice.</div>
+          <div class="story-tags"><span class="tag">Next.js</span><span class="tag">Upwork</span><span class="tag">International</span></div>
+        </div>
+        <div class="story-item">
+          <div class="story-dot"></div>
+          <div class="story-year">2022 — Evolution</div>
+          <div class="story-head">AI became part of my muscle memory</div>
+          <div class="story-body">When GPT-3 dropped, I treated it as a collaborator, not a tool. Built my first AI-augmented product before most developers could write a decent prompt. That head start compounded into a completely different skill set.</div>
+          <div class="story-tags"><span class="tag">OpenAI</span><span class="tag">LangChain</span><span class="tag">AI Integration</span></div>
+        </div>
+        <div class="story-item">
+          <div class="story-dot"></div>
+          <div class="story-year">Now — 2026</div>
+          <div class="story-head">300+ shipped. Still building.</div>
+          <div class="story-body">Led remote teams, shipped products used by thousands, and developed a philosophy: the best engineers are obsessed with the problem, not the technology. Looking for a team where that obsession is shared.</div>
+          <div class="story-tags"><span class="tag">Tech Lead</span><span class="tag">300+ shipped</span><span class="tag">7+ years</span></div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:#fff;margin-bottom:.6rem;line-height:1.5">"I don't optimise for job titles. I optimise for impact. The title follows."</div>
+        <div style="font-size:12px;color:var(--muted)">— W.N., somewhere between a commit and a gym session</div>
+      </div>
+    </div>
+
+    <!-- HIRE -->
+    <div class="panel" id="panel-hire">
+      <div class="sec-label">Let's Work</div>
+      <h2 class="sec-title">What I Bring</h2>
+      <p class="sec-sub">Senior roles, contract work, or a conversation — open to the right opportunity.</p>
+      <div class="service-grid">
+        <div class="service-card"><div class="service-icon">⚡</div><div class="service-name">Frontend Architecture</div><div class="service-desc">Next.js 14, React, TypeScript. Performance-first systems built to scale without breaking.</div></div>
+        <div class="service-card"><div class="service-icon">🤖</div><div class="service-name">AI Integration</div><div class="service-desc">LLMs, RAG, chatbots, agents. I architect products around AI, not on top of it.</div></div>
+        <div class="service-card"><div class="service-icon">🎯</div><div class="service-name">Conversion Engineering</div><div class="service-desc">UX that converts. Every design decision is a product decision.</div></div>
+        <div class="service-card"><div class="service-icon">👥</div><div class="service-name">Tech Leadership</div><div class="service-desc">Led remote teams of 5–10. Code reviews, architecture, mentorship, delivery.</div></div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div class="sec-label" style="margin-bottom:.75rem">Get In Touch</div>
+        <div class="connect-grid">
+          <a class="connect-card" href="https://wa.me/923156818008" target="_blank" rel="noopener"><div class="connect-icon">💬</div><div><div class="connect-label">WhatsApp</div><div class="connect-sub">+92 315 681 8008</div></div></a>
+          <a class="connect-card" href="mailto:wesalnowsher@outlook.com"><div class="connect-icon">✉️</div><div><div class="connect-label">Email</div><div class="connect-sub">wesalnowsher@outlook.com</div></div></a>
+          <a class="connect-card" href="https://www.linkedin.com/in/wesal-nowsher-a9b0a1120/" target="_blank" rel="noopener"><div class="connect-icon">🔗</div><div><div class="connect-label">LinkedIn</div><div class="connect-sub">wesal-nowsher</div></div></a>
+          <a class="connect-card" href="https://www.upwork.com/freelancers/~0192ae45c4ffb10d41" target="_blank" rel="noopener"><div class="connect-icon">💼</div><div><div class="connect-label">Upwork</div><div class="connect-sub">AI-augmented engineer</div></div></a>
+        </div>
+      </div>
+      <div class="cta-block">
+        <h3>Ready to build something?</h3>
+        <p>Senior roles, contract, or a quick conversation.</p>
+        <div class="cta-btns">
+          <a class="btn-wa" href="https://wa.me/923156818008" target="_blank" rel="noopener">WhatsApp ↗</a>
+          <a class="btn-primary" href="mailto:wesalnowsher@outlook.com">Email ↗</a>
+          <a class="btn-outline" href="https://www.linkedin.com/in/wesal-nowsher-a9b0a1120/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let ghBuilt = false;
+
+function show(id, btn) {
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('right-default').style.display = 'none';
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  if (window.innerWidth <= 700) {
+    setTimeout(() => panel && panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  } else {
+    document.getElementById('right-panel').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  if (id === 'github') buildGH();
+}
+
+// PARTICLES
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [];
+const mouse = { x: -999, y: -999 };
+function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+resize(); window.addEventListener('resize', resize);
+document.querySelector('.left').addEventListener('mousemove', e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+document.querySelector('.left').addEventListener('mouseleave', () => { mouse.x = -999; mouse.y = -999; });
+const COLS = ['#7c6cfc','#a78bfa','#2dd4bf','#c4b5fd','#818cf8'];
+for (let i = 0; i < 70; i++) pts.push({ x: Math.random()*500, y: Math.random()*800, vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3, r: Math.random()*1.5+.4, col: COLS[i%5], a: Math.random()*.4+.1 });
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p => {
+    const dx=mouse.x-p.x, dy=mouse.y-p.y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<140&&d>0){p.x-=dx*.013;p.y-=dy*.013;}
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col+Math.floor(p.a*255).toString(16).padStart(2,'0'); ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<85){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='#7c6cfc'+Math.floor((1-d/85)*.1*255).toString(16).padStart(2,'0');ctx.lineWidth=.4;ctx.stroke();}
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+// GITHUB
+function buildGH() {
+  if (ghBuilt) return; ghBuilt = true;
+  ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].forEach(m => {
+    const s = document.createElement('span'); s.textContent = m;
+    document.getElementById('gh-months').appendChild(s);
+  });
+  const grid = document.getElementById('gh-grid');
+  for (let i = 0; i < 364; i++) {
+    const d = document.createElement('div'), r = Math.random();
+    d.className = 'gh-cell' + (r<.42?'':r<.60?' l1':r<.75?' l2':r<.88?' l3':' l4');
+    grid.appendChild(d);
+  }
+  [{n:'847',l:'Contributions'},{n:'23',l:'Repos'},{n:'182',l:'PRs merged'},{n:'14',l:'Stars'}].forEach(s => {
+    const d = document.createElement('div'); d.className = 'gh-stat';
+    d.innerHTML = `<div class="n">${s.n}</div><div class="l">${s.l}</div>`;
+    document.getElementById('gh-stats').appendChild(d);
+  });
+  [{name:'TypeScript',pct:44,col:'#3178c6'},{name:'JavaScript',pct:28,col:'#f7df1e'},{name:'CSS/Tailwind',pct:14,col:'#7c6cfc'},{name:'Python',pct:9,col:'#3776ab'},{name:'Other',pct:5,col:'#555'}].forEach(l => {
+    const s = document.createElement('div'); s.className='lang-seg'; s.style.cssText=`width:${l.pct}%;background:${l.col}`;
+    document.getElementById('lang-bar').appendChild(s);
+    const dd = document.createElement('div'); dd.className='lang-dot';
+    dd.innerHTML=`<div class="lang-dot-c" style="background:${l.col}"></div>${l.name} ${l.pct}%`;
+    document.getElementById('lang-legend').appendChild(dd);
+  });
+}
+
+show('projects', document.querySelector('.nav-link'));
+</script>
+</body>
+</html>
